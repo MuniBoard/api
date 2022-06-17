@@ -2,7 +2,20 @@ import express, { Express } from "express";
 import morgan from "morgan";
 import routes from "./routes/base";
 
+const swaggerUI = require("swagger-ui-express");
+const swaggerJSDoc = require("swagger-jsdoc");
 const router: Express = express();
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "MuniBoard API",
+      version: "1.0.0",
+    },
+  },
+  apis: ["./src/main/routes/*.ts"],
+};
+const specs = swaggerJSDoc(options);
 
 /** Logging */
 router.use(morgan("dev"));
@@ -30,6 +43,8 @@ router.use((req, res, next) => {
 
 /** Routes */
 router.use("/", routes);
+
+router.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 /** Error handling */
 router.use((req, res, next) => {
