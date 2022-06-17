@@ -5,6 +5,7 @@
   "main": "src/main/server.ts",
   "scripts": {
     "dev": "nodemon src/main/server.ts",
+    "start": "node src/main/server.ts",
     "build": "rm -rf build/ && prettier --write src/main/ && tsc",
     "test": "jest",
     "build:test:and:dev": "(npm run build && npm run test) && npm run dev"
