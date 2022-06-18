@@ -22,6 +22,12 @@ const router = express.Router();
  *          application/json:
  *            schema:
  *              type: object
+ *      404:
+ *        description: API is not working
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  */
 router.get("/", controller.get);
 
