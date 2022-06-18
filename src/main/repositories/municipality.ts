@@ -23,6 +23,10 @@ class MunicipalityRepository {
         return this.municipalities as any;
     }    
 
+    get = (id : string) => {
+        return this.municipalities.find((municipality) => municipality.id === id);
+    }
+
 }
 
 export default MunicipalityRepository

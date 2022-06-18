@@ -65,4 +65,18 @@ const get = async(req: Request, res: Response, next: NextFunction) => {
     return res.status(200).json({municipalities});
 }
 
-export default { get, post };
+const getSingle = async(req: Request, res: Response, next: NextFunction) => {
+    if(!objectContainsNoOtherKeys(req.body, []) || !objectContainsNoOtherKeys(req.params, ['id'])) {
+        return res.status(400).json({});
+    }
+
+    const municipality = getMunicipalityRepository().get(req.params.id);
+
+    if(!municipality) {
+        return res.status(404).json({});
+    }
+
+    return res.status(200).json(municipality);
+}
+
+export default { getSingle, get, post };
