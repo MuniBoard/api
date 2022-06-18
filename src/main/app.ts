@@ -1,6 +1,6 @@
 import express, { Express } from "express";
 import morgan from "morgan";
-import routes from "./routes/base";
+import routes from "./routes/all";
 
 const swaggerUI = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
