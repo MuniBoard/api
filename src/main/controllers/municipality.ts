@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import {v4 as uuidv4} from "uuid";
+import { getMunicipalityRepository } from "../utils/datamanipulation";
 
 const objectContainsNoOtherKeys = (obj : object, keys : any) => {
     return Object.keys(obj).every(key => keys.includes(key));
@@ -42,14 +43,40 @@ const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const id = uuidv4();
-    const responseBody = {
+    const createdMunicipality = {
         id,
         name: req.body.name,
         coordinates: req.body.coordinates,
         website: req.body.website
     }
+    
+    getMunicipalityRepository().save(createdMunicipality);
 
-    return res.status(201).json(responseBody);
+    return res.status(201).json(createdMunicipality);
 };
 
-export default { post };
+const get = async(req: Request, res: Response, next: NextFunction) => {
+    if(!objectContainsNoOtherKeys(req.body, [])) {
+        return res.status(400).json({});
+    }
+
+    const municipalities = getMunicipalityRepository().getAll();
+
+    return res.status(200).json({municipalities});
+}
+
+const getSingle = async(req: Request, res: Response, next: NextFunction) => {
+    if(!objectContainsNoOtherKeys(req.body, []) || !objectContainsNoOtherKeys(req.params, ['id'])) {
+        return res.status(400).json({});
+    }
+
+    const municipality = getMunicipalityRepository().get(req.params.id);
+
+    if(!municipality) {
+        return res.status(404).json({});
+    }
+
+    return res.status(200).json(municipality);
+}
+
+export default { getSingle, get, post };

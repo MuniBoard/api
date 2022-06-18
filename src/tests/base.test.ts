@@ -1,6 +1,8 @@
 export {}
+const express = require('express');
 const supertest = require("supertest");
-const app = require("../main/app").default;
+const server = require("../main/app");
+const app = server.setup(express());
 describe("Get Health ", () => {
     it("should respond with a successful response", async () => {
       const response = await supertest(app).get("/");
