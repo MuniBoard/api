@@ -221,6 +221,11 @@ describe("Municipality", () => {
         });
 
         describe("with no municipality", () => {
+            it("should succeed", async () => {
+                const response = await callAPI().get("/municipality");
+
+                expect(response.statusCode).toBe(200);
+            });
             it("should return empty list", async () => {
                 const response = await callAPI().get("/municipality");
                 const body = JSON.parse(response.text);
@@ -235,14 +240,19 @@ describe("Municipality", () => {
                 const response = await callAPI().get("/municipality").send({ parameter : "ha" });
 
                 expect(response.statusCode).toBe(400);
-                
             });
         });
 
         describe("when one municipality", () => {
+            it("should succeed", async () => {
+                await createMunicipality(getOneMunicipality());
+
+                const response = await callAPI().get("/municipality");
+
+                expect(response.statusCode).toBe(200);
+            });
             it("should return list with one municipality", async () => {
-                const municipalityRequest = getOneMunicipality();
-                const municipalityResponseBody = await createMunicipality(municipalityRequest);
+                const municipalityResponseBody = await createMunicipality(getOneMunicipality());
 
                 const response = await callAPI().get("/municipality");
                 const body = JSON.parse(response.text);
@@ -254,6 +264,14 @@ describe("Municipality", () => {
         });
 
         describe("when multiple municipalities", () => {
+            it("should succeed", async () => {
+                await createMunicipality(getOneMunicipality());
+                await createMunicipality(getSecondMunicipality());
+
+                const response = await callAPI().get("/municipality");
+
+                expect(response.statusCode).toBe(200);
+            });
             it("should return list with multiple municipalities", async () => {
                 const oneMunicipalityResponseBody = await createMunicipality(getOneMunicipality());
                 const secondMunicipalityResponseBody = await createMunicipality(getSecondMunicipality());
@@ -267,33 +285,43 @@ describe("Municipality", () => {
                 expect(body.municipalities).toContainEqual(secondMunicipalityResponseBody);
             });
         });
+    });
+    describe("View Single Municipality", () => {
+        describe("when given params in body", () => {
+            it("should not succeed", async () => {
+                const response = await callAPI().get("/municipality/6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b").send({ parameter : "ha" });
 
-        function getOneMunicipality() {
-            return {
-                name: "Québec",
-                coordinates: {
-                    lat: 46.8565177,
-                    long: -71.4817748
-                },
-                website: "https://www.ville.quebec.qc.ca/"
-            };
-        };
+                expect(response.statusCode).toBe(400);
+            });
+        });
 
-        function getSecondMunicipality() {
-            return {
-                name: "Québec",
-                coordinates: {
-                    lat: 46.8565177,
-                    long: -71.4817748
-                },
-                website: "https://www.ville.quebec.qc.ca/"
-            };
-        };
+        describe("when given id of municipality that doesn't exist", () => {
+            it("should not succeed", async () => {
+                const response = await callAPI().get("/municipality/6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b");
 
-        async function createMunicipality(municipality : any) {
-            const response = await callAPI().post("/municipality").send(municipality);
-            return JSON.parse(response.text);
-        }
+                expect(response.statusCode).toBe(404);
+            })
+        });
+
+        describe("when given id of municipality that does exist", () => {
+
+            it("should succeed", async () => {
+                const municipalityBody = await createMunicipality(getOneMunicipality());
+
+                const response = await callAPI().get("/municipality/" + municipalityBody.id);
+
+                expect(response.statusCode).toBe(200);
+            });
+
+            it("should return municipality with specified id", async () => {
+                const municipalityBody = await createMunicipality(getOneMunicipality());
+
+                const response = await callAPI().get("/municipality/" + municipalityBody.id);
+                const body = JSON.parse(response.text);
+
+                expect(body).toEqual(municipalityBody);
+            });
+        })
     });
 });
 
@@ -301,3 +329,32 @@ function callAPI() {
     const call = supertest(app);
     return call;
 }
+
+async function createMunicipality(municipality : any) {
+    const response = await callAPI().post("/municipality").send(municipality);
+    return JSON.parse(response.text);
+}
+
+
+
+function getOneMunicipality() {
+    return {
+        name: "Québec",
+        coordinates: {
+            lat: 46.8565177,
+            long: -71.4817748
+        },
+        website: "https://www.ville.quebec.qc.ca/"
+    };
+};
+
+function getSecondMunicipality() {
+    return {
+        name: "Québec",
+        coordinates: {
+            lat: 46.8565177,
+            long: -71.4817748
+        },
+        website: "https://www.ville.quebec.qc.ca/"
+    };
+};
