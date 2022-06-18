@@ -107,5 +107,6 @@ const router = express.Router();
  *              type: object
  */
 router.post("/", controller.post);
+router.get("/", controller.get);
 
 export = router;
