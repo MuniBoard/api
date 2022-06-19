@@ -1,8 +1,10 @@
+import getNewDatabases from "../main/databases/inmemory/databases";
+import { setup } from "../main/app";
+
 export {}
 const express = require('express');
 const supertest = require("supertest");
-const server = require("../main/app");
-const app = server.setup(express());
+const app = setup(express(), getNewDatabases());
 describe("Get Health ", () => {
     it("should respond with a successful response", async () => {
       const response = await supertest(app).get("/");

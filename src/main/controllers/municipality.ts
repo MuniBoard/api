@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import {v4 as uuidv4} from "uuid";
-import { getMunicipalityRepository } from "../utils/datamanipulation";
+import { getRepository, ObjectsManipulated } from "../repositories/repositories";
 
 const objectContainsNoOtherKeys = (obj : object, keys : any) => {
     return Object.keys(obj).every(key => keys.includes(key));
@@ -50,7 +50,7 @@ const post = async (req: Request, res: Response, next: NextFunction) => {
         website: req.body.website
     }
     
-    getMunicipalityRepository().save(createdMunicipality);
+    getRepository(ObjectsManipulated.Municipality).save(createdMunicipality);
 
     return res.status(201).json(createdMunicipality);
 };
@@ -60,7 +60,7 @@ const get = async(req: Request, res: Response, next: NextFunction) => {
         return res.status(400).json({});
     }
 
-    const municipalities = getMunicipalityRepository().getAll();
+    const municipalities = getRepository(ObjectsManipulated.Municipality).getAll();
 
     return res.status(200).json({municipalities});
 }
@@ -70,7 +70,7 @@ const getSingle = async(req: Request, res: Response, next: NextFunction) => {
         return res.status(400).json({});
     }
 
-    const municipality = getMunicipalityRepository().get(req.params.id);
+    const municipality = getRepository(ObjectsManipulated.Municipality).get(req.params.id);
 
     if(!municipality) {
         return res.status(404).json({});

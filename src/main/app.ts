@@ -1,10 +1,12 @@
 import express, { Express } from "express";
 import morgan from "morgan";
+import Repository from "./repositories/repository";
 import MunicipalityRepository from "./repositories/municipality";
 import routes from "./routes/all";
-import { setMunicipalityRepository } from "./utils/datamanipulation";
+import { ObjectsManipulated, setRepositories } from "./repositories/repositories";
+import { MultiDatabaseContainer } from "./databases/common/multidatabasecontainer";
 
-function setup(router : Express) {
+function setup(router : Express, databases : MultiDatabaseContainer) {
   const swaggerUI = require("swagger-ui-express");
   const swaggerJSDoc = require("swagger-jsdoc");
   const options = {
@@ -56,7 +58,7 @@ function setup(router : Express) {
     });
   });
 
-  setMunicipalityRepository(new MunicipalityRepository());
+  setRepositories(new Map<ObjectsManipulated, Repository>([[ObjectsManipulated.Municipality, new MunicipalityRepository(databases.municipality)]]));
 
   return router;
 }
