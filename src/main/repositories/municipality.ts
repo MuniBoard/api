@@ -1,3 +1,6 @@
+import Database from "../databases/common/database";
+import Repository from "./repository";
+
 type Municipality = {
     id: string,
     name: string,
@@ -8,11 +11,13 @@ type Municipality = {
     website?: string
 }
 
-class MunicipalityRepository {
+class MunicipalityRepository implements Repository{
     municipalities : any []
+    database: Database;
 
-    constructor() {
+    constructor(database : Database) {
         this.municipalities = []
+        this.database = database
     }
     
     save = (municipality : any) => {

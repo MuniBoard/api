@@ -1,12 +1,14 @@
+import getNewDatabases from "../main/databases/inmemory/databases";
+import { setup } from "../main/app";
+
 export {}
 const express = require('express');
 const supertest = require("supertest");
-const server = require("../main/app");
 let app : any;
 const {validate: uuidValidate} = require("uuid");
 describe("Municipality", () => {
     beforeEach(() => {
-        app = server.setup(express());
+        app = setup(express(), getNewDatabases());
     });
 
     describe("Create Municipality", () => {
