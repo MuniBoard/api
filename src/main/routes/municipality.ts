@@ -1,6 +1,6 @@
 import express from "express";
 import controller from "../controllers/municipality";
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 
 /**
  * @swagger
@@ -111,7 +111,7 @@ router.post("/", controller.post);
  * @swagger
  * /municipality:
  *   get:
- *     summary: Views municipalities
+ *     summary: View municipalities
  *     tags: [Municipality]
  *     responses:
  *       200:
@@ -144,13 +144,13 @@ router.get("/", controller.get);
 
 /**
  * @swagger
- * /municipality/{id}:
+ * /municipality/{municipalityId}:
  *   get:
  *     summary: Get the municipality with specified id
  *     tags: [Municipality]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: municipalityId
  *         schema:
  *           type: string
  *         required: true
@@ -170,6 +170,6 @@ router.get("/", controller.get);
  *               type: object
  *               
  */
-router.get("/:id", controller.getSingle);
+router.get("/:municipalityId", controller.getSingle);
 
 export = router;
