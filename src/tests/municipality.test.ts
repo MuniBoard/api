@@ -1,5 +1,6 @@
 import getNewDatabases from "../main/databases/inmemory/databases";
 import { setup } from "../main/app";
+import { getOneMunicipality, getSecondMunicipality, createMunicipality } from "./utils/municipality";
 
 export {}
 const express = require('express');
@@ -13,9 +14,9 @@ describe("Municipality", () => {
 
     describe("Create Municipality", () => {
         it("route should exist", async () => {
-            const response = await callAPI().post("/municipality").send({});
+            const response = await callAPI().post("/municipality").send({routecheck: true});
 
-            expect(response.statusCode).not.toBe(404);
+            expect(response.statusCode).toBe(200);
         });
 
         describe("with bad inputs", () => {
@@ -219,7 +220,7 @@ describe("Municipality", () => {
         it("route should exist", async () => {
             const response = await callAPI().get("/municipality");
 
-            expect(response.statusCode).not.toBe(404);
+            expect(response.statusCode).toBe(200);
         });
 
         describe("with no municipality", () => {
@@ -247,14 +248,14 @@ describe("Municipality", () => {
 
         describe("when one municipality", () => {
             it("should succeed", async () => {
-                await createMunicipality(getOneMunicipality());
+                await createMunicipality(getOneMunicipality(), callAPI);
 
                 const response = await callAPI().get("/municipality");
 
                 expect(response.statusCode).toBe(200);
             });
             it("should return list with one municipality", async () => {
-                const municipalityResponseBody = await createMunicipality(getOneMunicipality());
+                const municipalityResponseBody = await createMunicipality(getOneMunicipality(), callAPI);
 
                 const response = await callAPI().get("/municipality");
                 const body = JSON.parse(response.text);
@@ -267,16 +268,16 @@ describe("Municipality", () => {
 
         describe("when multiple municipalities", () => {
             it("should succeed", async () => {
-                await createMunicipality(getOneMunicipality());
-                await createMunicipality(getSecondMunicipality());
+                await createMunicipality(getOneMunicipality(), callAPI);
+                await createMunicipality(getSecondMunicipality(), callAPI);
 
                 const response = await callAPI().get("/municipality");
 
                 expect(response.statusCode).toBe(200);
             });
             it("should return list with multiple municipalities", async () => {
-                const oneMunicipalityResponseBody = await createMunicipality(getOneMunicipality());
-                const secondMunicipalityResponseBody = await createMunicipality(getSecondMunicipality());
+                const oneMunicipalityResponseBody = await createMunicipality(getOneMunicipality(), callAPI);
+                const secondMunicipalityResponseBody = await createMunicipality(getSecondMunicipality(), callAPI);
 
                 const response = await callAPI().get("/municipality");
                 const body = JSON.parse(response.text);
@@ -289,9 +290,15 @@ describe("Municipality", () => {
         });
     });
     describe("View Single Municipality", () => {
+        it("route should exist", async () => {
+            const response = await callAPI().get("/municipality/routecheck");
+
+            expect(response.statusCode).toBe(200);
+        });
+
         describe("when given params in body", () => {
             it("should not succeed", async () => {
-                const response = await callAPI().get("/municipality/6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b").send({ parameter : "ha" });
+                const response = await callAPI().get("/municipality/routecheck").send({ parameter : "ha" });
 
                 expect(response.statusCode).toBe(400);
             });
@@ -308,7 +315,7 @@ describe("Municipality", () => {
         describe("when given id of municipality that does exist", () => {
 
             it("should succeed", async () => {
-                const municipalityBody = await createMunicipality(getOneMunicipality());
+                const municipalityBody = await createMunicipality(getOneMunicipality(), callAPI);
 
                 const response = await callAPI().get("/municipality/" + municipalityBody.id);
 
@@ -316,7 +323,7 @@ describe("Municipality", () => {
             });
 
             it("should return municipality with specified id", async () => {
-                const municipalityBody = await createMunicipality(getOneMunicipality());
+                const municipalityBody = await createMunicipality(getOneMunicipality(), callAPI);
 
                 const response = await callAPI().get("/municipality/" + municipalityBody.id);
                 const body = JSON.parse(response.text);
@@ -331,32 +338,3 @@ function callAPI() {
     const call = supertest(app);
     return call;
 }
-
-async function createMunicipality(municipality : any) {
-    const response = await callAPI().post("/municipality").send(municipality);
-    return JSON.parse(response.text);
-}
-
-
-
-function getOneMunicipality() {
-    return {
-        name: "Québec",
-        coordinates: {
-            lat: 46.8565177,
-            long: -71.4817748
-        },
-        website: "https://www.ville.quebec.qc.ca/"
-    };
-};
-
-function getSecondMunicipality() {
-    return {
-        name: "Québec",
-        coordinates: {
-            lat: 46.8565177,
-            long: -71.4817748
-        },
-        website: "https://www.ville.quebec.qc.ca/"
-    };
-};

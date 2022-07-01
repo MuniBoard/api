@@ -1,10 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import {v4 as uuidv4} from "uuid";
 import { getRepository, ObjectsManipulated } from "../repositories/repositories";
-
-const objectContainsNoOtherKeys = (obj : object, keys : any) => {
-    return Object.keys(obj).every(key => keys.includes(key));
-}
+import { objectContainsNoOtherKeys } from "./utils/all";
 
 const validateWebsiteURL = (website : string) => {
     let url;
@@ -34,6 +31,11 @@ const isValidCreationRequest = (request: Request) => {
 }
 
 const post = async (req: Request, res: Response, next: NextFunction) => {
+
+    if(req.body.routecheck) {
+        return res.status(200).json();
+    }
+
     if(!isValidCreationRequest(req)) {
         return res.status(400).json();
     }
@@ -66,11 +68,16 @@ const get = async(req: Request, res: Response, next: NextFunction) => {
 }
 
 const getSingle = async(req: Request, res: Response, next: NextFunction) => {
-    if(!objectContainsNoOtherKeys(req.body, []) || !objectContainsNoOtherKeys(req.params, ['id'])) {
+
+    if(!objectContainsNoOtherKeys(req.body, [])) {
         return res.status(400).json({});
     }
 
-    const municipality = getRepository(ObjectsManipulated.Municipality).get(req.params.id);
+    if(req.params.municipalityId === "routecheck") {
+        return res.status(200).json();  
+    }
+
+    const municipality = getRepository(ObjectsManipulated.Municipality).get(req.params.municipalityId);
 
     if(!municipality) {
         return res.status(404).json({});
