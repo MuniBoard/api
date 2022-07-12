@@ -1,6 +1,6 @@
 import express from "express";
 import controller from "../controllers/post";
-const router = express.Router({mergeParams: true});
+const router = express.Router({ mergeParams: true });
 
 /**
  * @swagger
@@ -47,6 +47,8 @@ const router = express.Router({mergeParams: true});
  *         content: My Content
  */
 
+router.use("/:postId?", controller.verify);
+
 /**
  * @swagger
  * /municipality/{municipalityId}/post:
@@ -72,7 +74,7 @@ const router = express.Router({mergeParams: true});
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/PostResponse' 
+ *               $ref: '#/components/schemas/PostResponse'
  *       400:
  *         description: Bad Request
  *         content:
@@ -85,8 +87,83 @@ const router = express.Router({mergeParams: true});
  *           application/json:
  *             schema:
  *               type: object
- *               
+ *
  */
 router.post("/", controller.post);
+
+/**
+ * @swagger
+ * /municipality/{municipalityId}/post:
+ *   get:
+ *     summary: View posts
+ *     tags: [Post]
+ *     parameters:
+ *       - in: path
+ *         name: municipalityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The municipality id
+ *     responses:
+ *       200:
+ *         description: List of posts successfully retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               municipalities:
+ *                 type: array
+ *                 items:
+ *                   $ref:'#/components/schemas/PostResponse'
+ *               example:
+ *                 posts:
+ *                   - id: 6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b
+ *                     title: I like this place
+ *                     content: Just wanted to say it
+ *
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *
+ */
+router.get("/", controller.get);
+
+/**
+ * @swagger
+ * /municipality/{municipalityId}/post/{postId}:
+ *   get:
+ *     summary: Get the post with specified id
+ *     tags: [Post]
+ *     parameters:
+ *       - in: path
+ *         name: municipalityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The municipality id
+ *       - in: path
+ *         name: postId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The post id
+ *     responses:
+ *       200:
+ *         description: List of municipalities successfully retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PostResponse'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *
+ */
+router.get("/:postId", controller.getSingle);
 
 export = router;
