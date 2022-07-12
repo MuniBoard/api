@@ -1,6 +1,6 @@
 import express from "express";
 import controller from "../controllers/municipality";
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 /**
  * @swagger
@@ -91,7 +91,7 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/MunicipalityRequest'
- *         
+ *
  *    responses:
  *      201:
  *        description: Municipality successfully created
@@ -111,7 +111,7 @@ router.post("/", controller.post);
  * @swagger
  * /municipality:
  *   get:
- *     summary: Views municipalities
+ *     summary: View municipalities
  *     tags: [Municipality]
  *     responses:
  *       200:
@@ -121,9 +121,9 @@ router.post("/", controller.post);
  *             schema:
  *               municipalities:
  *                 type: array
- *                 items: 
- *                   $ref:'#/components/schemas/MunicipalityResponse' 
- *               example: 
+ *                 items:
+ *                   $ref:'#/components/schemas/MunicipalityResponse'
+ *               example:
  *                 municipalities:
  *                   - id: 6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b
  *                     name: Québec
@@ -131,26 +131,26 @@ router.post("/", controller.post);
  *                       lat: 46.8565177
  *                       long: -71.4817748
  *                     website: https://www.ville.quebec.qc.ca/
- *                   
+ *
  *       400:
  *         description: Bad Request
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               
+ *
  */
 router.get("/", controller.get);
 
 /**
  * @swagger
- * /municipality/{id}:
+ * /municipality/{municipalityId}:
  *   get:
  *     summary: Get the municipality with specified id
  *     tags: [Municipality]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: municipalityId
  *         schema:
  *           type: string
  *         required: true
@@ -161,15 +161,15 @@ router.get("/", controller.get);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/MunicipalityResponse' 
+ *               $ref: '#/components/schemas/MunicipalityResponse'
  *       400:
  *         description: Bad Request
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               
+ *
  */
-router.get("/:id", controller.getSingle);
+router.get("/:municipalityId", controller.getSingle);
 
 export = router;

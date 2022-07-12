@@ -1,19 +1,19 @@
 import Database from "../databases/common/database";
 import Repository from "./repository";
 
-class MunicipalityRepository implements Repository {
+class PostRepository implements Repository {
   database: Database;
 
   constructor(database: Database) {
     this.database = database;
   }
 
-  save = (municipality: any) => {
-    return this.database.save(municipality);
+  save = (post: any) => {
+    return this.database.save(post);
   };
 
   getAll = () => {
-    return this.database.getAll();
+    return this.database.getAll() as any;
   };
 
   get = (id: string) => {
@@ -21,4 +21,4 @@ class MunicipalityRepository implements Repository {
   };
 }
 
-export default MunicipalityRepository;
+export default PostRepository;

@@ -1,7 +1,7 @@
 import Database from "../databases/common/database";
 import Repository from "./repository";
 
-class MunicipalityRepository implements Repository {
+class DummyRepository implements Repository {
   database: Database;
 
   constructor(database: Database) {
@@ -9,16 +9,16 @@ class MunicipalityRepository implements Repository {
   }
 
   save = (municipality: any) => {
-    return this.database.save(municipality);
+    return {};
   };
 
   getAll = () => {
-    return this.database.getAll();
+    return [];
   };
 
   get = (id: string) => {
-    return this.database.get(id);
+    return {};
   };
 }
 
-export default MunicipalityRepository;
+export default DummyRepository;

@@ -1,6 +1,6 @@
 import express from "express";
 import controller from "../controllers/base";
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 /**
  * @swagger
