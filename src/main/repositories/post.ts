@@ -1,24 +1,24 @@
 import Database from "../databases/common/database";
 import Repository from "./repository";
 
-class DummyRepository implements Repository {
+class PostRepository implements Repository {
   database: Database;
 
   constructor(database: Database) {
     this.database = database;
   }
 
-  save = (municipality: any) => {
-    return {};
+  save = (post: any) => {
+    return this.database.save(post);
   };
 
   getAll = () => {
-    return [];
+    return this.database.getAll() as any;
   };
 
   get = (id: string) => {
-    return {};
+    return this.database.get(id);
   };
 }
 
-export default DummyRepository;
+export default PostRepository;

@@ -1,18 +1,16 @@
 import Database from "../common/database";
 class DummyDatabase implements Database {
-    
-    save = (municipality : any) => {
-        return {};
-    }
-    
-    getAll = () => {
-        return [];
-    }    
+  save = (municipality: any) => {
+    return {};
+  };
 
-    get = (id : string) => {
-        return {};
-    }
+  getAll = () => {
+    return [];
+  };
 
+  get = (id: string) => {
+    return {};
+  };
 }
 
 export default DummyDatabase;
