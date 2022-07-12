@@ -1,6 +1,6 @@
 import Database from './database';
 
-export type MultiDatabaseContainer {
+export type MultiDatabaseContainer = {
     municipality : Database
     post : Database
 }
