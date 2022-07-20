@@ -28,12 +28,12 @@ const inputMakesSense = (request: Request) => {
 const isValidCreationRequest = (request: Request) => {
   const containsBody = !!request.body;
   const containsValidName =
-    !!request.body?.name && typeof request.body?.name === "string";
+    request.body?.name !== undefined && typeof request.body?.name === "string";
   const containsValidLat =
-    request.body?.coordinates?.lat &&
+    request.body?.coordinates?.lat !== undefined &&
     typeof request.body?.coordinates?.lat === "number";
   const containsValidLong =
-    request.body?.coordinates?.long &&
+    request.body?.coordinates?.long !== undefined &&
     typeof request.body?.coordinates?.long === "number";
   const containsValidCoordinates =
     request.body?.coordinates !== undefined &&
@@ -43,7 +43,7 @@ const isValidCreationRequest = (request: Request) => {
         containsValidLong &&
         objectContainsNoOtherKeys(request.body?.coordinates, ["lat", "long"])
       : true;
-  const containsValidWebsite = request.body?.website
+  const containsValidWebsite = request.body?.website !== undefined
     ? typeof request.body?.website === "string"
     : true;
   return (

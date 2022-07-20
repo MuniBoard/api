@@ -189,6 +189,22 @@ describe("Municipality", () => {
             })
         });
 
+        describe("with required and optional valid inputs with null-like values", () => {
+            const municipality = {
+                name: "",
+                coordinates: {
+                    lat: 0,
+                    long: 0
+                },
+                website: ""
+            }
+            it("should succeed", async () => {
+                const response = await callAPI().post("/municipality").send(municipality);
+
+                expect(response.statusCode).toBe(201);
+            })
+        });
+
         describe("with valid inputs", () => {
             const municipality = {
                 name: "Québec",
